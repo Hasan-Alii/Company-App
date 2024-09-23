@@ -1,3 +1,6 @@
+using Company.G02.DAL.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace Company.G02.PL
 {
     public class Program
@@ -8,6 +11,15 @@ namespace Company.G02.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            //builder.Services.AddScoped<AppDbContext>(); 
+            // Allow Dependency Injection For AppDbContext (manually)
+            
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer("Server = HASAN\\MSSQLSERVER09; Database = CompanyMVC; Trusted_Connection = True; TrustServerCertificate = True");
+            }); 
+            // extention method to allow dependency injection which
+            // was installed with the efcore package
 
             var app = builder.Build();
 
