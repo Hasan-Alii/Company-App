@@ -19,10 +19,10 @@ namespace Company.G02.DAL.Data.Contexts
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = HASAN\\MSSQLSERVER09; Database = CompanyMVC; Trusted_Connection = True; TrustServerCertificate = True");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server = HASAN\\MSSQLSERVER09; Database = CompanyMVC; Trusted_Connection = True; TrustServerCertificate = True");
+        //}
 
         public DbSet<Department> Departments { get; set; }
     }
