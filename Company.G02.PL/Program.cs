@@ -1,3 +1,5 @@
+using Company.G02.BLL.Interfaces;
+using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,15 +13,18 @@ namespace Company.G02.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            
             //builder.Services.AddScoped<AppDbContext>(); 
             // Allow Dependency Injection For AppDbContext (manually)
             
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            }); 
+            });
             // extention method to allow dependency injection which
             // was installed with the efcore package
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             var app = builder.Build();
 
