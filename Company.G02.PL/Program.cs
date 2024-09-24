@@ -16,7 +16,7 @@ namespace Company.G02.PL
             
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Server = HASAN\\MSSQLSERVER09; Database = CompanyMVC; Trusted_Connection = True; TrustServerCertificate = True");
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); 
             // extention method to allow dependency injection which
             // was installed with the efcore package
