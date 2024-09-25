@@ -1,32 +1,32 @@
 ﻿@model Department
 @{
-    ViewData["Title"] = "Create Department";
+    ViewData["Title"] = $"{Model.Name} Department Details";
 }
 
-<h1>Create Department</h1>
+<h1>@Model.Name Department Details</h1>
+
 <br />
 <br />
-<form asp-action="Create">
+
+<div>
     <div class="form-group">
         <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code" class="form-control"/>
+        <input asp-for="Code" class="form-control" disabled/>
         <span asp-validation-for="Code" class="text-danger"></span>
     </div>
-    
+
     <div class="form-group">
         <label asp-for="Name" class="col-form-label"></label>
-        <input asp-for="Name" class="form-control"/>
+        <input asp-for="Name" class="form-control" disabled />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="DateOfCreation" class="col-form-label"></label>
-        <input asp-for="DateOfCreation" class="form-control" />
+        <input asp-for="DateOfCreation" class="form-control" disabled />
     </div>
     <br />
-    <input type="submit" value="Create Department" class="btn btn-primary"/>
+    <a asp-action="Update" class="btn btn-success">Update</a>
     <a asp-action="Index" class="btn btn-outline-dark">Back To Department List</a>
-    
-
-</form>
+</div>
 

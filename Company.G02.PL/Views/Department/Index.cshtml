@@ -7,7 +7,7 @@
 <h1>All Departments</h1>
 <br/>
 <br/>
-<a asp-controller="Department" asp-action="Create" class="btn btn-primary">Create Department</a>
+<a asp-action="Create" class="btn btn-primary">Create Department</a>
 <br />
 <br />
 
@@ -31,9 +31,9 @@
                     <td>@dept.Code</td>
                     <td>@dept.Name</td>
                     <td>@dept.DateOfCreation</td>
-                    <td><a asp-action="Details" class="btn btn-warning">Details</a></td>
-                    <td><a asp-action="Update" class="btn btn-success">Update</a></td>
-                    <td><a asp-action="Delete" class="btn btn-danger">Delete</a></td>
+                    <td><a asp-action="Details" asp-route-Id="@dept.Id" class="btn btn-warning">Details</a></td>
+                    <td><a asp-action="Update" asp-route-Id="@dept.Id" class="btn btn-success">Update</a></td>
+                    <td><a asp-action="Delete" asp-route-Id="@dept.Id" class="btn btn-danger">Delete</a></td>
                 </tr>
             }
         </tbody>
