@@ -13,15 +13,15 @@ namespace Company.G02.DAL.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "CODE IS REQUIRED !!")]
-        [DisplayName("# Code")]
+        [Required(ErrorMessage = "Code Is Required!")]
+        [DisplayName("Code")]
         public string Code { get; set; } = "N/A";
 
-        [Required(ErrorMessage = "NAME IS REQUIRED !!")]
-        [DisplayName("Title")]
+        [Required(ErrorMessage = "Name Is Required!")]
         public string Name { get; set; } = "N/A";
         
-        [DisplayName("Date of Creation")]
+        [DisplayName("Creation Date")]
+        [Required(ErrorMessage = "Creation Date Is Required!")]
         public DateTime DateOfCreation { get; set; } 
     }
 }
