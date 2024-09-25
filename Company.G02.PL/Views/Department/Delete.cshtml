@@ -1,14 +1,12 @@
 ﻿@model Department
+
 @{
-    ViewData["Title"] = $"{Model.Name} Department Details";
+    ViewData["Title"] = $"Delete {Model.Name} Department";
 }
 
-<h1>@Model.Name Department Details</h1>
+<h1>Delete @Model.Name Department</h1>
 
-<br />
-<br />
-
-<div>
+<form asp-action="Delete">
     <div class="form-group">
         <label asp-for="Code" class="col-form-label"></label>
         <input asp-for="Code" class="form-control" disabled/>
@@ -26,7 +24,7 @@
         <input asp-for="DateOfCreation" class="form-control" disabled />
     </div>
     <br />
-    <a asp-action="Update" asp-route-Id="@Model.Id" class="btn btn-success">Update</a>
+    <input type="submit" value="Delete Department" class="btn btn-danger" />
     <a asp-action="Index" class="btn btn-outline-dark">Back To Department List</a>
-</div>
+</form>
 
