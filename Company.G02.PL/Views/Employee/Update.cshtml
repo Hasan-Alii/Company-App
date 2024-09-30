@@ -1,0 +1,21 @@
+﻿ @model Employee
+
+@{
+    ViewData["Title"] = $"Update {Model.Name}";
+}
+
+<h1>Update @Model.Name</h1>
+
+<br />
+<br />
+
+<form asp-action="Update">
+    <div asp-validation-summary="All" class="text-danger"></div>
+   
+    <partial name="PartialViews/CreateUpdateEmployeePartialView" model="Model" />
+
+    <br />
+    <input type="submit" value="Update Department" class="btn btn-success"/>
+    <a asp-action="Index" class="btn btn-outline-dark">Back To Department List</a>
+</form>
+

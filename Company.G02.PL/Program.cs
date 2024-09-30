@@ -25,6 +25,7 @@ namespace Company.G02.PL
             // was installed with the efcore package
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             var app = builder.Build();
 

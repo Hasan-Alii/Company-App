@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace Company.G02.DAL.Models
 {
-    public class Department
+    public class Department : BaseEntity
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Code Is Required!")]
         [DisplayName("Code")]
         public string Code { get; set; } = "N/A";
