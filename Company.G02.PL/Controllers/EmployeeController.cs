@@ -2,22 +2,24 @@
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Company.G02.PL.Controllers
 {
-    public class DepartmentController : Controller
+    public class EmployeeController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentController(IDepartmentRepository repository)
+        IEmployeeRepository _employeeRepository { get; set; }
+
+        public EmployeeController(IEmployeeRepository employeeRepository)
         {
-            _departmentRepository = repository;
+            _employeeRepository = employeeRepository;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
-            return View(departments);
+            var employees =  _employeeRepository.GetAll().ToList();
+            return View(employees);
         }
 
         [HttpGet]
@@ -28,48 +30,44 @@ namespace Company.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Department department)
+        public IActionResult Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
-                var count = _departmentRepository.Add(department);
+                var count = _employeeRepository.Add(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(department);
+            return View(employee);
+
         }
 
         [HttpGet]
-        public IActionResult Details(int? Id, string ViewName = nameof(Update))
+        public IActionResult Details(int? Id, string ViewName = "Details")
         {
-            if(Id is null) return BadRequest(); // 400
-            var department = _departmentRepository.Get(Id.Value);
-            if (department is null) return NotFound(); // 404
-            return View(ViewName, department);
+            if (Id is null) return BadRequest(); // 400 
+            var employee = _employeeRepository.Get(Id.Value);
+            if(employee is null) return NotFound(); // 404
+            return View(ViewName, employee);
         }
 
-        [HttpGet]
         public IActionResult Update(int? Id)
         {
-            //if (Id is null) return BadRequest();
-            //var department = _employeeRepository.Get(Id.Value);
-            //if (department is null) return NotFound();
             return Details(Id, nameof(Update));
         }
 
-        // Server Side Validation
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update([FromRoute] int? Id, Department department)
+        public IActionResult Update([FromRoute]int? Id, Employee employee)
         {
             try
             {
-                if (Id != department.Id) return BadRequest(); // 400
+                if(Id != employee.Id) return BadRequest(); // 400
                 if (ModelState.IsValid)
                 {
-                    var count = _departmentRepository.Update(department);
+                    var count = _employeeRepository.Update(employee);
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -78,30 +76,28 @@ namespace Company.G02.PL.Controllers
             }
             catch (Exception e)
             {
+
                 ModelState.AddModelError(string.Empty, e.Message);
             }
-            return View(department);
+            return View(employee);
         }
 
         [HttpGet]
         public IActionResult Delete(int? Id)
         {
-            //if (Id is null) return BadRequest();
-            //var department = _employeeRepository.Get(Id.Value);
-            //if (department is null) return NotFound();
             return Details(Id, "Delete");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int? Id, Department department)
+        public IActionResult Delete([FromRoute]int? Id, Employee employee)
         {
             try
             {
-                if (Id != department.Id) return BadRequest(); // 400
+                if (Id != employee.Id) return BadRequest(); // 400
                 if (ModelState.IsValid)
                 {
-                    var count = _departmentRepository.Delete(department);
+                    var count = _employeeRepository.Delete(employee);
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -112,7 +108,7 @@ namespace Company.G02.PL.Controllers
             {
                 ModelState.AddModelError(string.Empty, e.Message);
             }
-            return View(department);
+            return View(employee);
         }
     }
 }

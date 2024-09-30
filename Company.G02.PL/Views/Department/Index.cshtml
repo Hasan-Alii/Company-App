@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Department>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All Departments";
 }
 
 <h1>All Departments</h1>
@@ -31,9 +31,8 @@
                     <td>@dept.Code</td>
                     <td>@dept.Name</td>
                     <td>@dept.DateOfCreation</td>
-                    <td><a asp-action="Details" asp-route-Id="@dept.Id" class="btn btn-warning">Details</a></td>
-                    <td><a asp-action="Update" asp-route-Id="@dept.Id" class="btn btn-success">Update</a></td>
-                    <td><a asp-action="Delete" asp-route-Id="@dept.Id" class="btn btn-danger">Delete</a></td>
+                    <partial name="_ButtonsPartialView" model="@dept.Id" />
+
                 </tr>
             }
         </tbody>

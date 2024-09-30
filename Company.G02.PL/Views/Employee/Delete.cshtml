@@ -1,0 +1,25 @@
+﻿@model Employee
+
+@{
+    ViewData["Title"] = $"Delete {Model.Name}";
+}
+
+<h1>Delete @Model.Name</h1>
+
+<br />
+<br />
+
+<form asp-action="Delete">
+
+    <partial name="PartialViews/DetailsDeleteEmployeePartialView" model="Model"/>
+
+    <br />
+    <input type="submit" value="Delete Employee" class="btn btn-danger" />
+    <a asp-action="Index" class="btn btn-outline-dark">Back To Employees List</a>
+
+</form>
+
+@section Validation {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
