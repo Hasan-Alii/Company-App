@@ -20,6 +20,7 @@ namespace Company.G02.DAL.Models
         
         [DisplayName("Creation Date")]
         [Required(ErrorMessage = "Creation Date Is Required!")]
-        public DateTime DateOfCreation { get; set; } 
+        public DateTime DateOfCreation { get; set; }
+        public ICollection<Employee>? Employees { get; set; }
     }
 }

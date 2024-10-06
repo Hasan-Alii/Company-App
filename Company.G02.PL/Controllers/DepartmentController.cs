@@ -7,16 +7,21 @@ namespace Company.G02.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentController(IDepartmentRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        //private readonly IDepartmentRepository _departmentRepository;
+        public DepartmentController(
+            IUnitOfWork unitOfWork
+            /*IDepartmentRepository repository*/)
         {
-            _departmentRepository = repository;
+            _unitOfWork = unitOfWork;
+            //_departmentRepository = repository;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
             return View(departments);
         }
 
@@ -32,7 +37,8 @@ namespace Company.G02.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var count = _departmentRepository.Add(department);
+                _unitOfWork.DepartmentRepository.Add(department);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -45,7 +51,7 @@ namespace Company.G02.PL.Controllers
         public IActionResult Details(int? Id, string ViewName = nameof(Update))
         {
             if(Id is null) return BadRequest(); // 400
-            var department = _departmentRepository.Get(Id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(Id.Value);
             if (department is null) return NotFound(); // 404
             return View(ViewName, department);
         }
@@ -69,7 +75,8 @@ namespace Company.G02.PL.Controllers
                 if (Id != department.Id) return BadRequest(); // 400
                 if (ModelState.IsValid)
                 {
-                    var count = _departmentRepository.Update(department);
+                    _unitOfWork.DepartmentRepository.Add(department);
+                    var count = _unitOfWork.Complete();
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -101,7 +108,8 @@ namespace Company.G02.PL.Controllers
                 if (Id != department.Id) return BadRequest(); // 400
                 if (ModelState.IsValid)
                 {
-                    var count = _departmentRepository.Delete(department);
+                    _unitOfWork.DepartmentRepository.Add(department);
+                    var count = _unitOfWork.Complete();
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
