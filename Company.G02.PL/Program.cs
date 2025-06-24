@@ -2,7 +2,9 @@ using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.BLL.UnitOfWork;
 using Company.G02.DAL.Data.Contexts;
+using Company.G02.DAL.Models;
 using Company.G02.PL.Mapping.Employee;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.G02.PL
@@ -13,7 +15,7 @@ namespace Company.G02.PL
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // AddAsync services to the container.
             builder.Services.AddControllersWithViews();
             
             //builder.Services.AddScoped<AppDbContext>(); 
@@ -30,7 +32,18 @@ namespace Company.G02.PL
             //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
             builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                            .AddEntityFrameworkStores<AppDbContext>()
+                            .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+                config.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
             var app = builder.Build();
 
@@ -47,11 +60,12 @@ namespace Company.G02.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Employee}/{action=Index}/{id?}");
 
             app.Run();
         }
