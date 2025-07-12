@@ -24,9 +24,9 @@ namespace Company.G02.BLL.UnitOfWork
         public IDepartmentRepository DepartmentRepository => _departmentRepository;
         public IEmployeeRepository EmployeeRepository => _employeeRepository;
 
-        public int Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
     }
 }

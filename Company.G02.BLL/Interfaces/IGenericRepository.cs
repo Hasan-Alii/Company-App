@@ -9,9 +9,9 @@ namespace Company.G02.BLL.Interfaces
 {
     public interface IGenericRepository<T>
     {
-        IEnumerable<T> GetAll();
-        T Get(int Id);
-        void Add(T entity);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int Id);
+        Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
     }
