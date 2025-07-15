@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace Company.G02.DAL.Models
 {
-    // Emplyee Model
     public class Employee : BaseEntity
     {
         public string Name { get; set; }
         public int? Age { get; set; }
         public string Address { get; set; }
-        [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
+        public string? ImageName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsActive { get; set; }

@@ -2,13 +2,16 @@
 using Company.G02.BLL.Interfaces;
 using Company.G02.BLL.Repositories;
 using Company.G02.DAL.Models;
+using Company.G02.PL.Helper;
 using Company.G02.PL.ViewModels.Employee;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Company.G02.PL.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         //private readonly IEmployeeRepository _employeeRepository;
@@ -29,17 +32,18 @@ namespace Company.G02.PL.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index(string InputSearch)
+        #region Index of Employees
+        public async Task<IActionResult> Index(string SearchInput)
         {
             var employees = Enumerable.Empty<Employee>();
             //IEnumerable<Employee> employees;
-            if (string.IsNullOrEmpty(InputSearch))
+            if (string.IsNullOrEmpty(SearchInput))
             {
-                employees = _unitOfWork.EmployeeRepository.GetAll();
+                employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
             }
             else
             {
-                employees = _unitOfWork.EmployeeRepository.GetByName(InputSearch);
+                employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
             }
 
             var result = _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);
@@ -58,28 +62,34 @@ namespace Company.G02.PL.Controllers
              */
 
             return View(result);
-        }
+        } 
+        #endregion
 
+        #region Create Employee
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments = _unitOfWork.DepartmentRepository.GetAll();
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
             ViewData["departments"] = departments;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Employee employee)
+        public async Task<IActionResult> Create(EmployeeViewModel employee)
         {
             try
             {
+                if (employee.Image != null)
+                {
+                    employee.ImageName = DocumentSettings.Upload(employee.Image, "images");
+                }
                 // casting viewmodel -> model and vice versa
                 if (ModelState.IsValid)
                 {
                     var result = _mapper.Map<Employee>(employee);
-                    _unitOfWork.EmployeeRepository.Add(result);
-                    var count = _unitOfWork.Complete();
+                    await _unitOfWork.EmployeeRepository.AddAsync(result);
+                    var count = await _unitOfWork.CompleteAsync();
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -93,33 +103,37 @@ namespace Company.G02.PL.Controllers
             }
             return View(employee);
         }
+        #endregion
 
+        #region Details of Employee
         [HttpGet]
-        public IActionResult Details(int? Id, string ViewName = "Details")
+        public async Task<IActionResult> Details(int? Id, string ViewName = "Details")
         {
             try
             {
                 if (Id is null) return BadRequest(); // 400 
-                var employee = _unitOfWork.EmployeeRepository.Get(Id.Value);
+                var employee = await _unitOfWork.EmployeeRepository.GetAsync(Id.Value);
                 if (employee is null) return NotFound(); // 404
                 var result = _mapper.Map<EmployeeViewModel>(employee);
                 return View(result);
             }
-            catch (Exception e )
+            catch (Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
                 return RedirectToAction("Error", "Home");
             }
         }
+        #endregion
 
-        public IActionResult Update(int? Id)
+        #region Update Employee
+        public async Task<IActionResult> Update(int? Id)
         {
             try
             {
-                var departments = _unitOfWork.DepartmentRepository.GetAll();
+                var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
                 ViewData["departments"] = departments;
                 if (Id is null) return BadRequest();
-                var employee = _unitOfWork.EmployeeRepository.Get(Id.Value);
+                var employee = await _unitOfWork.EmployeeRepository.GetAsync(Id.Value);
                 if (employee is null) return NotFound();
                 var result = _mapper.Map<EmployeeViewModel>(employee);
                 return View(result);
@@ -133,16 +147,20 @@ namespace Company.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update([FromRoute]int? Id, Employee employee)
+        public async Task<IActionResult> Update([FromRoute] int? Id, EmployeeViewModel employee)
         {
             try
             {
-                if(Id != employee.Id) return BadRequest(); // 400
+                if (Id != employee.Id) return BadRequest(); // 400
                 if (ModelState.IsValid) // Server Side Validation
                 {
+                    if (employee.ImageName is not null)
+                        DocumentSettings.Delete(employee.ImageName, "images");
+                    if (employee.Image != null)
+                        employee.ImageName = DocumentSettings.Upload(employee.Image, "images");
                     var result = _mapper.Map<Employee>(employee);
                     _unitOfWork.EmployeeRepository.Update(result);
-                    var count = _unitOfWork.Complete();
+                    var count = await _unitOfWork.CompleteAsync();
                     if (count > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -156,16 +174,18 @@ namespace Company.G02.PL.Controllers
             }
             return View(employee);
         }
+        #endregion
 
+        #region Delete Employee
         [HttpGet]
-        public IActionResult Delete(int? Id)
+        public async Task<IActionResult> Delete(int? Id)
         {
             try
             {
-                var departments = _unitOfWork.DepartmentRepository.GetAll();
-                ViewData[index: "departments"] = departments;
+                var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+                ViewData["departments"] = departments;
                 if (Id is null) return BadRequest();
-                var employee = _unitOfWork.EmployeeRepository.Get(Id.Value);
+                var employee = await _unitOfWork.EmployeeRepository.GetAsync(Id.Value);
                 if (employee is null) return NotFound();
                 var result = _mapper.Map<EmployeeViewModel>(employee);
                 return View(result);
@@ -180,7 +200,7 @@ namespace Company.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute]int? Id, Employee employee)
+        public async Task<IActionResult> Delete([FromRoute] int? Id, EmployeeViewModel employee)
         {
             try
             {
@@ -189,9 +209,11 @@ namespace Company.G02.PL.Controllers
                 {
                     var result = _mapper.Map<Employee>(employee);
                     _unitOfWork.EmployeeRepository.Delete(result);
-                    var count = _unitOfWork.Complete();
+                    var count = await _unitOfWork.CompleteAsync();
                     if (count > 0)
                     {
+                        if (employee.ImageName != null)
+                            DocumentSettings.Delete(employee.ImageName, "images");
                         return RedirectToAction(nameof(Index));
                     }
                 }
@@ -201,6 +223,7 @@ namespace Company.G02.PL.Controllers
                 ModelState.AddModelError(string.Empty, e.Message);
             }
             return View(employee);
-        }
+        } 
+        #endregion
     }
 }
