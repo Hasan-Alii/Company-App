@@ -8,10 +8,10 @@ namespace Company.G02.PL.ViewModels.Employee
         public int Id { get; set; }
         [Required(ErrorMessage = "Name Is Required")]
         public string Name { get; set; }
-        [Range(25, 60, ErrorMessage = "Age Must Be Between 25 - 60")]
+        [Range(18, 60, ErrorMessage = "Age Must Be Between 18 - 60")]
         public int? Age { get; set; }
 
-        [RegularExpression(@"[0-9]{0,3}-[a-zA-Z]{2,10}-[a-zA-Z]{2,10}-[a-zA-Z]{2,10}$",
+        [RegularExpression(@"[0-9]{0,4}-[a-zA-Z ]{2,100}-[a-zA-Z ]{2,50}-[a-zA-Z ]{2,50}$",
             ErrorMessage = "Address Must Be Like This Formula: 123-Street-City-Country")]
         public string Address { get; set; }
 
@@ -31,5 +31,7 @@ namespace Company.G02.PL.ViewModels.Employee
         public DateTime HiringDate { get; set; }
         public int? WorkForId { get; set; }
         public Department? WorkFor { get; set; } // Navigational Property
+        public IFormFile? Image { get; set; }
+        public string? ImageName { get; set; }
     }
 }
