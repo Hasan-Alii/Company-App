@@ -14,7 +14,7 @@ element.addEventListener("keyup", () => {
         let xhr = new XMLHttpRequest();
 
         // Making our connection  
-        let url = `https://localhost:44353/Controller/Index?SearchInput=${element.value}`;
+        let url = `https://localhost:44353/Employee/Index?InputSearch=${element.value}`;
         xhr.open("Post", url, true);
 
         // function execute after request is successful 
