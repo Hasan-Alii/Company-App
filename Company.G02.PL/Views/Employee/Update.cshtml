@@ -9,13 +9,13 @@
 <br />
 <br />
 
-<form asp-action="Update">
-    <div asp-validation-summary="All" class="text-danger"></div>
-   
-    <partial name="PartialViews/CreateUpdateEmployeePartialView" model="Model" />
+<form asp-action="Update" enctype="multipart/form-data">
+    <partial name="EmployeePartialViews/CreateUpdateEmployeePartialView" model="Model" />
+
+    <input hidden asp-for="ImageName"/>
 
     <br />
-    <input type="submit" value="Update Department" class="btn btn-success"/>
-    <a asp-action="Index" class="btn btn-outline-dark">Back To Department List</a>
+    <input type="submit" value="Update Employee" class="btn btn-success" />
+    <a asp-action="Index" class="btn btn-outline-dark">Back To Employees List</a>
 </form>
 
