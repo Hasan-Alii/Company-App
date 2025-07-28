@@ -11,8 +11,8 @@
 
 <form asp-action="Delete">
 
-    <partial name="PartialViews/DetailsDeleteEmployeePartialView" model="Model"/>
-
+    <partial name="EmployeePartialViews/DetailsDeleteEmployeePartialView" model="Model"/>
+    <input hidden asp-for="ImageName"/>
     <br />
     <input type="submit" value="Delete Employee" class="btn btn-danger" />
     <a asp-action="Index" class="btn btn-outline-dark">Back To Employees List</a>
